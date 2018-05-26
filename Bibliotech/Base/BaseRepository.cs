@@ -2,6 +2,7 @@
 using NHibernate.Criterion;
 using NHibernate.Linq;
 using NHibernate.Transform;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,16 @@ using System.Web;
 
 namespace Bibliotech.Base
 {
-    public class BaseRepository<T> where T : class
+    public abstract class BaseRepository<T> where T : class
     {
-        public virtual T GetById(object id)
+        protected virtual void DoAfterGet(T obj)
+        {
+
+        }
+        
+        public abstract void LazyProperties(T model);
+
+        public virtual T GetById(object id, bool lazyProperties = true)
         {
             using (ISession session = NHibernateHelper.OpenSession())
             {
@@ -25,11 +33,16 @@ namespace Bibliotech.Base
                 if (result.Count > 0)
                     obj = result[0];
 
+                DoAfterGet(obj);
+
+                if(lazyProperties)
+                    LazyProperties(obj);
+
                 return obj;
             }
         }
 
-        public T GetByExample(T example)
+        public T GetByExample(T example, bool lazyProperties = false)
         {
             using (ISession session = NHibernateHelper.OpenSession())
             {
@@ -45,26 +58,39 @@ namespace Bibliotech.Base
 
                         if (value1 != null && value2 != null && value1.ToString().ToLower() == value2.ToString().ToLower())
                         {
+                            DoAfterGet(listExample[0]);
+                            if (lazyProperties)
+                                LazyProperties(listExample[0]);
+
                             return listExample[0];
                         }
                     }
                 }
             }
+
             return default(T);
         }
 
-        public virtual List<T> GetList()
+        public virtual List<T> GetList(bool lazyProperties = false)
         {
             using (ISession session = NHibernateHelper.OpenSession())
             {
                 ICriteria criteria = session.CreateCriteria(typeof(T));
                 List<T> list = criteria.List<T>().ToList();
 
+                if (lazyProperties)
+                {
+                    foreach (var obj in list)
+                    {
+                        LazyProperties(obj);
+                    }
+                }
+
                 return list;
             }
         }
 
-        public virtual List<T> GetPagedList(int? page, Int32 quantidade)
+        public virtual IPagedList<T> GetPagedList(int? page, Int32 quantidade)
         {
             int pagina = page == null ? 1 : (int)page;
 
@@ -75,7 +101,9 @@ namespace Bibliotech.Base
 
                 criteria.SetFirstResult(pagina).SetMaxResults(quantidade);
 
-                return list;
+                PagedList<T> resultList = (PagedList<T>)list.ToPagedList<T>(pagina, quantidade);
+
+                return resultList;
             }
         }
 
@@ -153,6 +181,7 @@ namespace Bibliotech.Base
             using (ISession session = NHibernateHelper.OpenSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
+                session.Clear();
                 BeforeCommitSaveOrUpdate(session, ref entity);
                 session.SaveOrUpdate(entity);
                 transaction.Commit();
@@ -220,11 +249,20 @@ namespace Bibliotech.Base
             }
         }
 
-        public IList<T> Consultar()
+        public T GetFirst(T exemplo, bool lazyProperties = false)
         {
             using (ISession session = NHibernateHelper.OpenSession())
             {
-                return (from c in session.Query<T>() select c).ToList();
+                ICriteria criteria = session.CreateCriteria(typeof(T)).Add(Example.Create(exemplo));
+
+                var list = criteria.SetMaxResults(1).List<T>().ToList();
+                var obj = list.Count > 0 ? list[0] : null;
+
+                if (obj != null && lazyProperties)
+                    LazyProperties(obj);
+                DoAfterGet(obj);
+
+                return obj;
             }
         }
     }

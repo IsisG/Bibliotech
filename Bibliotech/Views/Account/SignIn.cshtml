@@ -11,25 +11,52 @@
     <div class="card-header">@ViewBag.Title</div>
     <div class="card-body">
         @using (Ajax.BeginForm("SignIn", "Account", null,
-                            new AjaxOptions { HttpMethod = "post", OnSuccess = "sucesso", OnFailure = "falha" }, new { id = "myFormLogin", @class = "form-horizontal" }))
+                                    new AjaxOptions { HttpMethod = "post", OnSuccess = "sucesso" }, new { id = "myFormLogin", @class = "form-horizontal" }))
         {
+            @Html.Hidden("ReturnUrl", Model.Item2)
+
             <div class="form-group">
-                @Html.LabelFor(x => x.Item1.Login, new { @for="Login" })
-                @*@Html.TextBoxFor(x => x.Item1.Login, new { @type="text", @class = "form-control", @id="Login", @name="Login" })*@
-                @*<label for="exampleInputEmail1">Email address</label>*@
+                @Html.LabelFor(x => x.Item1.Login, new { @for = "Login" })
                 <input class="form-control" id="Login" name="Login" type="text" aria-describedby="emailHelp">
             </div>
             <div class="form-group">
                 @Html.LabelFor(x => x.Item1.Senha, new { @for = "Senha" })
-                @*@Html.TextBoxFor(x => x.Item1.Senha, new { @type = "password", @class = "form-control" })*@
-                @*<label for="exampleInputPassword1">Password</label>*@
                 <input class="form-control" id="Senha" name="Senha" type="password">
             </div>
-            <input class="btn btn-primary btn-block" value="Entrar" type="submit" />
+            <button class="btn btn-primary btn-block" type="button" onclick="entrar()">Entrar</button>
+
         }
         <div class="text-center">
-            <a class="d-block small mt-3" href="register.html">Register an Account</a>
-            <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+            <a class="d-block small" href="#">Esqueceu sua senha?</a>
         </div>
     </div>
 </div>
+
+<script>
+    function sucesso(data) {
+        if (data.Status == 0) {
+            window.location.href = $("#ReturnUrl").val();
+        }
+        else {
+            $("#Senha").val(null);
+            bootbox.alert("Usuário ou senha inválidos.");
+        }
+    }
+
+    function entrar() {
+        $.ajax({
+            type: "POST",
+            url: "/Account/SignIn",
+            data: $("#myFormLogin").serialize(),
+            success: function (data) {
+                sucesso(data);
+            },
+            error: function (msg) {
+                //var title = (/<title>(.*?)<\/title>/m).exec(msg.responseText)[1];
+                //bootbox.alert(title);
+                alert("Erro.");
+            }
+        });
+    }
+
+</script>

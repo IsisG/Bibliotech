@@ -1,0 +1,20 @@
+﻿@using Bibliotech
+@using Bibliotech.Models
+
+@{
+    ViewBag.Action = "Devolução";
+    ViewBag.Title = "Livro";
+    ViewBag.ActionController = "DevolucaoPost";
+}
+
+@model Emprestimo
+
+@Html.Partial("~/Views/Emprestimo/Manter.cshtml", Model)
+
+@section Scripts{
+    @Scripts.Render("~/scripts/Util.js")
+    @Scripts.Render("~/scripts/jquery-3.3.1.js")
+    @Scripts.Render("~/scripts/html5-qrcode.js")
+    @Scripts.Render("~/scripts/jsqrcode-combined.min.js")
+}
+

@@ -1,0 +1,18 @@
+﻿@using Bibliotech
+@using Bibliotech.Models
+@using PagedList
+@using PagedList.Mvc
+
+@{
+    ViewBag.Action = "Alterar";
+    ViewBag.Title = "Estante";
+}
+
+@model Estante
+
+@Html.Partial("~/Views/Estante/Manter.cshtml", Model)
+
+@section Scripts{
+    @Scripts.Render("~/scripts/Util.js")
+    @Scripts.Render("~/scripts/Estante.js")
+}

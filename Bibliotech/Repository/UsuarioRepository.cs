@@ -1,6 +1,7 @@
 ﻿using Bibliotech.Base;
 using Bibliotech.Models;
 using NHibernate;
+using NHibernate.Criterion;
 using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
@@ -28,19 +29,48 @@ namespace Bibliotech.Repository
             }
         }
 
-        public bool ValidarLogin(string login)
+        public override void BeforeCommitSaveOrUpdate(ISession session, ref Usuario entity)
+        {
+            entity.Senha = CriptografiaHelper.Encriptar(entity.Senha);
+        }
+
+        protected override void DoAfterGet(Usuario entity)
+        {
+            if (entity != null)
+                entity.Senha = CriptografiaHelper.Decriptar(entity.Senha);
+        }
+
+        public List<Usuario> GetListUsuarioByExample(Usuario entity)
         {
             using (ISession session = NHibernateHelper.OpenSession())
             {
-                return (from e in session.Query<Usuario>() where e.Login.Equals(login) select e).Count() > 0;
+                ICriteria criteria = session.CreateCriteria(typeof(Usuario));
+
+                if(entity.Id != null)
+                    criteria.Add(Restrictions.Eq("Id", entity.Id));
+
+                if (entity.DataNascimento != null)
+                    criteria.Add(Restrictions.Eq("DataNascimento", entity.DataNascimento));
+
+                if (entity.Perfil != null)
+                    criteria.Add(Restrictions.Eq("Perfil", entity.Perfil));
+
+                if (entity.Email != null)
+                    criteria.Add(Restrictions.InsensitiveLike("Email", "%" + entity.Email + "%"));
+
+                if (entity.Login != null)
+                    criteria.Add(Restrictions.InsensitiveLike("Login", "%" + entity.Login + "%"));
+
+                if (entity.Nome != null)
+                    criteria.Add(Restrictions.InsensitiveLike("Nome", "%" + entity.Nome + "%"));
+
+                return criteria.List<Usuario>().ToList();
             }
         }
-        public bool ValidarAcesso(string login, string senha)
+
+        public override void LazyProperties(Usuario model)
         {
-            using (ISession session = NHibernateHelper.OpenSession())
-            {
-                return (from e in session.Query<Usuario>() where e.Login.Equals(login) && e.Senha.Equals(senha) select e).Count() > 0;
-            }
+            
         }
     }
 }

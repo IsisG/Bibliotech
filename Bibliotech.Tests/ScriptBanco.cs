@@ -17,7 +17,7 @@ namespace Bibliotech.Test
             FluentConfiguration configuration = Fluently.Configure()
             .Database(MsSqlConfiguration.MsSql2008.ConnectionString(conectionString))
             .ExposeConfiguration(cfg => new SchemaExport(cfg).SetOutputFile("ScriptBanco.sql").Create(true, false))
-            .Mappings(x => x.FluentMappings.AddFromAssemblyOf<Pessoa>());
+            .Mappings(x => x.FluentMappings.AddFromAssemblyOf<Usuario>());
 
             configuration.BuildSessionFactory();
         }

@@ -1,0 +1,17 @@
+﻿@using Bibliotech
+@using Bibliotech.Models
+@using PagedList
+@using PagedList.Mvc
+
+@{
+    ViewBag.Action = "Adicionar";
+    ViewBag.Title = "Editora";
+}
+
+@model Editora
+
+@Html.Partial("~/Views/Editora/Manter.cshtml", Model)
+
+@section Scripts{
+    @Scripts.Render("~/scripts/Util.js")
+}

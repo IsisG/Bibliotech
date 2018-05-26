@@ -1,0 +1,176 @@
+﻿@using Bibliotech
+@using Bibliotech.Models
+@using PagedList
+@using PagedList.Mvc
+
+@{
+    ViewBag.Action = "Acervo";
+    ViewBag.Title = "Livro";
+}
+
+@model Tuple<IPagedList<Livro>, Livro>
+
+<div class="table-responsive">
+    <div class="panel-heading">
+        <div class="row border-bottom" style="margin-left: 0px; margin-right: 0px;">
+            @Html.Partial("~/Views/Shared/_PageHeader.cshtml")
+            <div class="col col-xs-6 text-right">
+                <button type="button" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalSearch">
+                    <i class="fa fa-filter"></i> Filtrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Item1 != null && Model.Item1.Count > 0)
+    {
+        <div class="row col-12">
+            @foreach (var livro in Model.Item1)
+            {
+                <div class="col-3 livro">
+                    @if(livro.NomeFoto != null)
+                    {
+                        <img class="image" id="imgFoto_@livro.Id" src="@Url.Content("/Livro/GetImagemCapa/" + livro.Id)" style="max-height: 200px;  width: 150px" />
+                    }
+                    else
+                    {
+                        <img class="image" id="imgFoto_@livro.Id" src="@Url.Content("~/Images/capadefault.png")" style="max-height: 200px;  width: 150px" />
+                    }
+                </div>
+                <div class="overlay">
+                    <a href="#" class="icon" title="@livro.Titulo">
+                        <i class="fa fa-info-circle"></i>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <br />
+
+        <div class="alert alert-secondary" role="alert">
+            Nenhum registro encontrado.
+        </div>
+    }
+
+    @if (Model != null && Model.Item1 != null && (Model.Item1.HasNextPage || Model.Item1.HasPreviousPage))
+    {
+        <div class="text-center">
+            @Html.PagedListPager(Model.Item1, (page) => Url.Action("Listar",
+                             new RouteValueDictionary
+                    {   { "page", page
+                },
+                        { "Titulo", Model.Item2 != null ? Model.Item2.Titulo : null },
+                        { "Isbn", Model.Item2 != null ? Model.Item2.Isbn : null },
+                        { "Edicao", Model.Item2 != null ? Model.Item2.Edicao : null },
+                        { "Assunto", Model.Item2 != null ? Model.Item2.Assunto : null }
+                    }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+        </div>
+    }
+
+</div>
+
+<!---------- FILTRAR ------------->
+<div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="text-align: center" class="modal-title">
+                    Filtrar Livro
+                </h3>
+                <button type="button" class="close" data-dismiss="modal" title="Fechar busca">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Item2.Titulo, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-6">
+                            @Html.TextBox("Titulo", Model.Item2.Titulo, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Item2.Isbn, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-6">
+                            @Html.TextBox("Isbn", Model.Item2.Isbn, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Item2.Assunto, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-6">
+                            @Html.TextBox("Assunto", Model.Item2.Assunto, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Item2.Edicao, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-6">
+                            @Html.TextBox("Edicao", Model.Item2.Edicao, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">
+                            <span class="glyphicon glyphicon-search"></span>Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container needed to position the overlay. Adjust the width as needed */
+    .livro {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    /* Make the image to responsive */
+    .image {
+        width: 100%;
+        height: auto;
+    }
+
+    /* The overlay effect (full height and width) - lays on top of the container and over the image */
+    .overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        transition: .3s ease;
+        background-color: red;
+    }
+
+    /* When you mouse over the container, fade in the overlay icon*/
+    .livro:hover .overlay {
+        opacity: 1;
+    }
+
+    /* The icon inside the overlay is positioned in the middle vertically and horizontally */
+    .icon {
+        color: white;
+        font-size: 100px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    /* When you move the mouse over the icon, change color */
+    .fa-user:hover {
+        color: #eee;
+    }
+</style>
+
+@section Scripts{
+    @Scripts.Render("~/Scripts/Util.js")
+}

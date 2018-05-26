@@ -1,0 +1,17 @@
+﻿@using Bibliotech
+@using Bibliotech.Models
+@using PagedList
+@using PagedList.Mvc
+
+@{
+    ViewBag.Action = "Alterar";
+    ViewBag.Title = "Autor";
+}
+
+@model Autor
+
+@Html.Partial("~/Views/Autor/Manter.cshtml", Model)
+
+@section Scripts{
+    @Scripts.Render("~/scripts/Util.js")
+}

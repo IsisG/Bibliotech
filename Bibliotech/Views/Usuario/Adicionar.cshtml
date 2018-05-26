@@ -1,0 +1,20 @@
+﻿@using Bibliotech
+@using Bibliotech.Models
+@using PagedList
+@using PagedList.Mvc
+
+@{
+    ViewBag.Action = "Adicionar";
+    ViewBag.Title = "Usuário";
+}
+
+@model Usuario
+
+@Html.Partial("~/Views/Usuario/Manter.cshtml", Model)
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/jquery.mask.js"></script>
+
+@section Scripts{
+    @Scripts.Render("~/scripts/Util.js")
+}

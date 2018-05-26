@@ -1,0 +1,109 @@
+﻿@using Bibliotech
+@using Bibliotech.Models
+@using PagedList
+@using PagedList.Mvc
+
+@model Usuario
+
+<div class="panel panel-default">
+
+    <div class="panel-heading">
+        <div class="row border-bottom" style="margin-left: 0px; margin-right: 0px;">
+            @Html.Partial("~/Views/Shared/_PageHeader.cshtml")
+        </div>
+    </div>
+
+    <div class="panel-body">
+        @using (Ajax.BeginForm("Salvar", "Usuario", null,
+                                            new AjaxOptions { HttpMethod = "post", OnSuccess = "sucesso" }, new { id = "myForm", @class = "needs-validation" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.Version)
+            @Html.HiddenFor(x => x.DataAlteracaoSenha)
+
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    @Html.LabelFor(x => x.Nome)
+                    @Html.TextBoxFor(x => x.Nome, new { @class = "form-control", type = "text", @data_val_required = "teste", @data_val = true })
+                    <div class="invalid-feedback">
+                        Please choose a username.
+                        @Html.ValidationMessageFor(x => x.Nome)
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(x => x.DataNascimento)
+                    @Html.TextBoxFor(x => x.DataNascimento, new { @class = "form-control date", type = "text" })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => x.Telefone)
+                    @Html.TextBoxFor(x => x.Telefone, new { @class = "form-control phone", type = "text" })
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(x => x.Login)
+                    @Html.TextBoxFor(x => x.Login, new { @class = "form-control", type = "text" })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => x.Email)
+                    @Html.TextBoxFor(x => x.Email, new { @class = "form-control", type = "email" })
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(x => x.Senha)
+                    @Html.TextBoxFor(x => x.Senha, new { @class = "form-control", type = "password" })
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    @Html.LabelFor(x => x.Perfil)
+                    @Html.EnumDropDownListFor(x => x.Perfil, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="panel-footer">
+                <button class="btn btn-secondary" type="button" onclick="voltar()">Voltar</button>
+                <button class="btn btn-primary" type="button" onclick="salvar('Usuario')">Salvar</button>
+            </div>
+
+        }
+    </div>
+</div>
+
+<script>
+    (function ($) {
+        $(function () {
+            $('.date').mask('00/00/0000');
+            $('.phone').mask('(00) 0000-0000Z', {
+                translation: {
+                    'Z': {
+                        pattern: /[0-9]/, optional: true
+                    }
+                }
+            });
+
+        });
+    })(jQuery);
+
+    function sucesso(data) {
+        bootbox.alert(data.Message, function () {
+            if (data.Status == 0) {
+                window.location.href = "/Usuario/Listar";
+            }
+        });
+    }
+</script>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/scripts/jquery.validate.js")
+    @Scripts.Render("~/scripts/Util.js")
+}

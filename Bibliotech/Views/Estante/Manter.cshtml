@@ -1,0 +1,106 @@
+﻿@using Bibliotech.Models
+@using PagedList
+@using PagedList.Mvc
+
+@model Estante
+
+<div class="panel panel-default">
+
+    <div class="panel-heading">
+        <div class="row border-bottom" style="margin-left: 0px; margin-right: 0px;">
+            @Html.Partial("~/Views/Shared/_PageHeader.cshtml")
+        </div>
+    </div>
+
+    <br />
+
+    <ul id="myTab" class="nav nav-tabs" role="tablist">
+        <li class="nav-item"><a class="nav-link active" id="tabEstante" href="#estante" role="tab" data-toggle="tab">Informações da Estante</a></li>
+        <li class="nav-item"><a class="nav-link" id="tabPrateleiras" href="#prateleiras" role="tab" data-toggle="tab">Prateleiras</a></li>
+    </ul>
+
+    @using (Ajax.BeginForm("Salvar", "Estante", null,
+                                        new AjaxOptions { HttpMethod = "post", OnSuccess = "sucesso" }, new { id = "myForm" }))
+    {
+        <div class="panel-body tab-content">
+
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.Version)
+
+
+            <div id="estante" class="tab-pane active">
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(x => x.Descricao)
+                        @Html.TextBoxFor(x => x.Descricao, new { @class = "form-control", type = "text" })
+                    </div>
+                </div>
+            </div>
+
+            <div id="prateleiras" class="tab-pane">
+                @Html.Hidden("qtdPrateleiras", (Model != null && Model.Prateleiras != null ? Model.Prateleiras.Count : 0))
+                <div class="col col-xs-6 text-right">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="inserirPrateleira()">
+                        <i class="fa fa-plus"></i> Inserir Prateleira
+                    </button>
+                </div>
+
+                <br />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="d-flex">
+                            <th class="col-3">Descrição</th>
+                            <th class="col-9"><i class="fa fa-cog"></i></th>
+                        </tr>
+                    </thead>
+                </table>
+
+                @for (int i = 0; i < (Model != null && Model.Prateleiras != null ? Model.Prateleiras.Count : 0); i++)
+                {
+                    @Html.HiddenFor(x => x.Prateleiras[i].Id)
+                    <div class="form-row" id="divPrateleiras_@i">
+                        <div class="col-3">
+                            @Html.TextBoxFor(x => x.Prateleiras[i].Descricao, new { @class = "form-control", type = "text" })
+                        </div>
+                        <div class="col-9">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removerPrateleira(@i);">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                <div id="divPrateleiras_n"></div>
+            </div>
+
+
+
+            <br />
+
+            <div class="panel-footer">
+                <button class="btn btn-secondary" type="button" onclick="voltar()">Voltar</button>
+                <button class="btn btn-primary" type="button" onclick="salvar('Estante')">Salvar</button>
+            </div>
+            
+
+        </div>
+    }
+</div>
+
+<script>
+    function sucesso(data) {
+        bootbox.alert(data.Message, function () {
+            if (data.Status == 0) {
+                window.location.href = "/Estante/Listar";
+            }
+        });
+    }
+</script>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/scripts/jquery.validate.js")
+    @Scripts.Render("~/scripts/Util.js")
+}

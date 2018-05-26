@@ -1,0 +1,147 @@
+﻿@using Bibliotech
+@using Bibliotech.Models
+
+@model Emprestimo
+
+<div class="panel panel-default">
+
+    <div class="panel-heading">
+        <div class="row border-bottom" style="margin-left: 0px; margin-right: 0px;">
+            @Html.Partial("~/Views/Shared/_PageHeader.cshtml")
+        </div>
+    </div>
+
+    <div class="panel-body">
+        @using (Ajax.BeginForm(ViewBag.ActionController as string, "Emprestimo", null,
+                    new AjaxOptions { HttpMethod = "post", OnSuccess = "sucesso" }, new { id = "myForm", @class = "needs-validation" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.Version)
+            @Html.HiddenFor(x => x.Usuario.Id)
+            @Html.HiddenFor(x => x.Exemplar.Id)
+            @Html.Hidden("isUsuarioScannerOpen", false)
+            @Html.Hidden("isExemplarScannerOpen", false)
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(x => x.Usuario)
+                    <div class="input-group mb-3">
+                        <input id="tbxUsuario" readonly type="text" class="form-control" placeholder="Selecione um Usuário..." aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="btnScannerUsuario" onclick="startScanner('Usuario');">
+                                Escanear <i class="fa fa-qrcode" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapse" id="divScannerUsuario">
+                <div class="card card-body" id="cardUsuario">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(x => x.Exemplar)
+                    <div class="input-group mb-3">
+                        <input id="tbxExemplar" readonly type="text" class="form-control" placeholder="Selecione um Exemplar...">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="btnScannerExemplar" onclick="startScanner('Exemplar');">
+                                Escanear <i class="fa fa-qrcode" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapse" id="divScannerExemplar">
+                <div class="card card-body" id="cardExemplar">
+                </div>
+            </div>
+
+            <br />
+
+            <div class="panel-footer">
+                <button class="btn btn-secondary" type="button" onclick="voltar()">Voltar</button>
+                <button class="btn btn-primary" type="button" onclick="submitAction('Emprestimo', '@(ViewBag.ActionController)')">Salvar</button>
+            </div>
+
+        }
+    </div>
+</div>
+
+<script>
+    function startScanner(field) {
+        var html = '<div id="reader' + field + '" style="width:300px;height:250px"></div>';
+        $("#card" + field).append(html);
+
+        $("#divScanner" + field).slideDown("slow");
+
+        $('#reader' + field).html5_qrcode(function (data) {
+            var isReaderOpen = $("#is" + field + "ScannerOpen").val();
+            if (isReaderOpen == "False") {
+                $("#is" + field + "ScannerOpen").val("True");
+
+                $.ajax({
+                    "url": '/Emprestimo/Buscar' + field + '?id=' + data,
+                    "type": "get",
+                    "dataType": "json",
+                    success: function (dataEmp) {
+                        $("#card" + field).empty();
+                        $('#reader' + field).html5_qrcode_stop();
+
+                        if (dataEmp.Status != 0) {
+                            bootbox.alert({
+                                message: dataEmp.Mensagem,
+                                callback: function () {
+                                    $("#is" + field + "ScannerOpen").val("False");
+                                }
+                            });
+
+                            startScanner(field);
+                        } else {
+                            $("#tbx" + field).val(dataEmp.Texto);
+                            $("#" + field + "_Id").val(data);
+                            $("#btnScanner" + field).prop("disabled", true);
+                            $("#divScanner" + field).slideUp("slow");
+                            $("#is" + field + "ScannerOpen").val(false);
+                        }
+                    },
+                    error: function (msg) {
+                        var title = (/<title>(.*?)<\/title>/m).exec(msg.responseText)[1];
+                        bootbox.alert(title);
+                    }
+                });
+            }
+
+        },
+           function (error) {
+
+
+           }, function (videoError) {
+               bootbox.alert("O scanner não pode ser aberto.");
+           }
+        );
+    }
+
+    function posLoad() {
+
+    }
+
+    function sucesso(data) {
+        bootbox.alert(data.Message, function () {
+            if (data.Status == 0) {
+                window.location.href = "/Home/Index";
+            }
+        });
+    }
+</script>
+
+@section Scripts{
+    @Scripts.Render("~/scripts/Util.js")
+    @Scripts.Render("~/scripts/jquery-3.3.1.js")
+    @Scripts.Render("~/scripts/html5-qrcode.js")
+    @Scripts.Render("~/scripts/jsqrcode-combined.min.js")
+}

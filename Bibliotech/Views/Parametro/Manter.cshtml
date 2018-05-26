@@ -1,0 +1,110 @@
+﻿@using Bibliotech
+@using Bibliotech.Models
+@using PagedList
+@using PagedList.Mvc
+
+@model Parametro
+
+@{
+    ViewBag.Action = "  Parâmetro";
+    ViewBag.Title = "";
+}
+
+<div class="panel panel-default">
+
+    <div class="panel-heading">
+        <div class="row border-bottom" style="margin-left: 0px; margin-right: 0px;">
+            @Html.Partial("~/Views/Shared/_PageHeader.cshtml")
+        </div>
+    </div>
+
+    <div class="panel-body">
+        @using (Ajax.BeginForm("Salvar", "Parametro", null,
+                                            new AjaxOptions { HttpMethod = "post", OnSuccess = "sucesso" }, new { id = "myForm", @class = "needs-validation" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.Version)
+
+            <br>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => x.ValorMultaAtraso)
+                    @Html.TextBoxFor(x => x.ValorMultaAtraso, new { @class = "form-control money", type = "text" })
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => x.DiasAlteracaoSenha)
+                    @Html.TextBoxFor(x => x.DiasAlteracaoSenha, new { @class = "form-control number", type = "text" })
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => x.DiasPrazoDevolucao)
+                    @Html.TextBoxFor(x => x.DiasPrazoDevolucao, new { @class = "form-control number", type = "text" })
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => x.DiasPrazoReserva)
+                    @Html.TextBoxFor(x => x.DiasPrazoReserva, new { @class = "form-control number", type = "text" })
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => x.QuantidadeMaximaEmprestimo)
+                    @Html.TextBoxFor(x => x.QuantidadeMaximaEmprestimo, new { @class = "form-control number", type = "text" })
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => x.EmailRemetente)
+                    @Html.TextBoxFor(x => x.EmailRemetente, new { @class = "form-control", type = "email" })
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => x.Senha)
+                    @Html.TextBoxFor(x => x.Senha, new { @class = "form-control", type = "password" })
+                </div>
+            </div>
+
+            <div class="panel-footer">
+                <button class="btn btn-secondary" type="button" onclick="voltar()">Voltar</button>
+                <button class="btn btn-primary" type="button" onclick="salvar('Parametro')">Salvar</button>
+            </div>
+
+        }
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/jquery.mask.js"></script>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/scripts/jquery.validate.js")
+    @Scripts.Render("~/scripts/Util.js")
+}
+
+<script>
+    (function ($) {
+        $(function () {
+            $('.money').mask("#.##0,00", { reverse: true });
+            $('.number').mask('0#');
+        });
+    })(jQuery);
+
+
+    function sucesso(data) {
+        bootbox.alert(data.Message, function () {
+            if (data.Status == 0) {
+                window.location.href = "/Parametro/Manter";
+            }
+        });
+    }
+</script>
+
+

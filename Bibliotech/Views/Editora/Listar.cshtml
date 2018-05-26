@@ -1,0 +1,110 @@
+﻿@using Bibliotech
+@using Bibliotech.Models
+@using PagedList
+@using PagedList.Mvc
+
+@{
+    ViewBag.Action = "Listar";
+    ViewBag.Title = "Editora";
+}
+
+@model Tuple<IPagedList<Editora>, Editora>
+
+
+<div class="table-responsive">
+    <div class="panel-heading">
+        <div class="row border-bottom" style="margin-left: 0px; margin-right: 0px;">
+            @Html.Partial("~/Views/Shared/_PageHeader.cshtml")
+            <div class="col col-xs-6 text-right">
+                <button type="button" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalSearch">
+                    <i class="fa fa-filter"></i> Filtrar
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="adicionar('Editora')">
+                    <i class="fa fa-plus"></i> Adicionar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Item1.Count > 0)
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr class="d-flex">
+                    <th class="col-5">Nome</th>
+                    <th class="col-2 text-center"><i class="fa fa-cog"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Item1)
+                {
+                    <tr class="d-flex">
+                        <td class="col-5">@(item.Nome)</td>
+                        <td class="col-3">ADD EDITORA</td>
+                           <button type="button" class="btn btn-warning" onclick="alterar('Editora', 'id', '@(item.Id)')">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger" onclick="remover('Editora', '@(item.Id)')">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <br />
+        <div class="alert alert-secondary" role="alert">
+            Nenhum registro encontrado.
+        </div>
+    }
+
+    @if (Model.Item1.HasNextPage || Model.Item1.HasPreviousPage)
+    {
+        <div class="text-center">
+            @Html.PagedListPager(Model.Item1, (page) => Url.Action("Listar",
+                             new RouteValueDictionary
+                    {   { "page", page },
+                        { "Nome", Model.Item2 != null ? Model.Item2.Nome : null },
+
+                    }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+        </div>
+    }
+
+</div>
+
+<!---------- FILTRAR ------------->
+<div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="text-align: center" class="modal-title">
+                    Filtrar Editora
+                </h3>
+                <button type="button" class="close" data-dismiss="modal" title="Fechar busca">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Item2.Nome, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-6">
+                            @Html.TextBox("Nome", Model.Item2.Nome, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">
+                            <span class="glyphicon glyphicon-search"></span>Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/Scripts/Util.js")
+}
