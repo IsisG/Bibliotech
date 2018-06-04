@@ -1,20 +1,13 @@
-﻿@{
-    Layout = null;
-}
-
-<h1>Relatórios</h1>
-<hr>
-<!-- Icon Cards-->
-<div class="row">
+﻿<div class="row">
     <div class="col-xl-3 col-sm-6 mb-3">
         <div class="card text-white bg-primary o-hidden h-100">
             <div class="card-body">
                 <div class="card-body-icon">
                     <i class="fa fa-check"></i>
                 </div>
-                <div class="mr-5">Empréstimos Ativos</div>
+                <div class="mr-5">Empréstimos<br />Ativos</div>
             </div>
-            <a class="card-footer text-white clearfix small z-1" href="#">
+            <a class="card-footer text-white clearfix small z-1" href="/Emprestimo/ListarEmprestimosAtivos">
                 <span class="float-left">Ver Detalhes</span>
                 <span class="float-right">
                     <i class="fa fa-angle-right"></i>
@@ -26,27 +19,11 @@
         <div class="card text-white bg-warning o-hidden h-100">
             <div class="card-body">
                 <div class="card-body-icon">
-                    <i class="fa fa-fw fa-list"></i>
+                    <i class="fa fa-hourglass-half"></i>
                 </div>
-                <div class="mr-5">Empréstimos Atrasados</div>
+                <div class="mr-5">Exemplares Reservados</div>
             </div>
-            <a class="card-footer text-white clearfix small z-1" href="#">
-                <span class="float-left">Ver Detalhes</span>
-                <span class="float-right">
-                    <i class="fa fa-angle-right"></i>
-                </span>
-            </a>
-        </div>
-    </div>
-    <div class="col-xl-3 col-sm-6 mb-3">
-        <div class="card text-white bg-success o-hidden h-100">
-            <div class="card-body">
-                <div class="card-body-icon">
-                    <i class="fa fa-file-text"></i>
-                </div>
-                <div class="mr-5">Empréstimos Mensais</div>
-            </div>
-            <a class="card-footer text-white clearfix small z-1" href="#">
+            <a class="card-footer text-white clearfix small z-1" href="/Reserva/ListarReservasAtivas">
                 <span class="float-left">Ver Detalhes</span>
                 <span class="float-right">
                     <i class="fa fa-angle-right"></i>
@@ -58,11 +35,11 @@
         <div class="card text-white bg-danger o-hidden h-100">
             <div class="card-body">
                 <div class="card-body-icon">
-                    <i class="fa fa-clone"></i>
+                    <i class="fa fa-fw fa-calendar-times-o" "></i>
                 </div>
-                <div class="mr-5">Controle de Acervo</div>
+                <div class="mr-5">Empréstimos Atrasados</div>
             </div>
-            <a class="card-footer text-white clearfix small z-1" href="#">
+            <a class="card-footer text-white clearfix small z-1" href="/Emprestimo/ListarEmprestimosAtrasados">
                 <span class="float-left">Ver Detalhes</span>
                 <span class="float-right">
                     <i class="fa fa-angle-right"></i>
@@ -70,5 +47,21 @@
             </a>
         </div>
     </div>
-</div>
+    <div class="col-xl-3 col-sm-6 mb-3">
+        <div class="card text-white bg-success o-hidden h-100">
+            <div class="card-body">
+                <div class="card-body-icon">
+                    <i class="fa fa-list"></i>
+                </div>
+                <div class="mr-5">Controle de Acervo</div>
+            </div>
+            <a class="card-footer text-white clearfix small z-1" href="/Livro/Acervo">
+                <span class="float-left">Ver Detalhes</span>
+                <span class="float-right">
+                    <i class="fa fa-angle-right"></i>
+                </span>
+            </a>
+        </div>
+    </div>
 
+</div>

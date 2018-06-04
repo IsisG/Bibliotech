@@ -19,6 +19,8 @@ namespace Bibliotech.Models
         public virtual Exemplar Exemplar { get; set; }
 
         public virtual Usuario Usuario { get; set; }
+        
+        public virtual PagamentoMulta PagamentoMulta { get; set; }
 
         public virtual byte[] Version { get; set; }
 
@@ -34,6 +36,8 @@ namespace Bibliotech.Models
 
                 References<Exemplar>(x => x.Exemplar).Not.Nullable();
                 References<Usuario>(x => x.Usuario).Not.Nullable();
+
+                HasOne<PagamentoMulta>(x => x.PagamentoMulta).Cascade.All();
 
                 Version(x => x.Version)
                     .Nullable()

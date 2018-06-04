@@ -1,5 +1,6 @@
 ﻿using Bibliotech.Base;
 using Bibliotech.Models;
+using Bibliotech.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,20 @@ namespace Bibliotech.Business
             SetMensagemSalvar(livro);
             SetStatusSucesso();
             return true;
+        }
+
+        public StatusExemplar TratarStatusExemplar(Guid? exemplarId)
+        {
+            Exemplar exemplar = ExemplarRepository.Instance.GetById(exemplarId);
+
+            if (exemplar.ExclusivoBiblioteca == true)
+                return StatusExemplar.ExclusivoBiblioteca;
+
+            else if (ReservaRepository.Instance.GetListReservasAtivasByExemplo(new Reserva { Exemplar = new Exemplar { Id = exemplarId } }).Count > 0)
+                return StatusExemplar.Reservado;
+
+            else
+                return (StatusExemplar)exemplar.Status;
         }
     }
 }

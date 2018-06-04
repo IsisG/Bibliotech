@@ -26,9 +26,6 @@
             <button class="btn btn-primary btn-block" type="button" onclick="entrar()">Entrar</button>
 
         }
-        <div class="text-center">
-            <a class="d-block small" href="#">Esqueceu sua senha?</a>
-        </div>
     </div>
 </div>
 
@@ -52,9 +49,8 @@
                 sucesso(data);
             },
             error: function (msg) {
-                //var title = (/<title>(.*?)<\/title>/m).exec(msg.responseText)[1];
-                //bootbox.alert(title);
-                alert("Erro.");
+                var title = (/<title>(.*?)<\/title>/m).exec(msg.responseText)[1];
+                bootbox.alert(title);
             }
         });
     }

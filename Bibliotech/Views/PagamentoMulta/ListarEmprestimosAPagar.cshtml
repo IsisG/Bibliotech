@@ -5,8 +5,8 @@
 @using PagedList.Mvc
 
 @{
-    ViewBag.Action = "Empréstimos";
-    ViewBag.Title = "Atrasados";
+    ViewBag.Action = "Multas";
+    ViewBag.Title = "Registrar Pagamento";
 }
 
 @model Tuple<IPagedList<Emprestimo>, Emprestimo>
@@ -29,11 +29,8 @@
                     <th class="col-2">Início</th>
                     <th class="col-2">Limite para Entrega</th>
                     <th class="col-2">Multa atualizada</th>
-                    @if (usuarioLogado.Perfil != Perfil.Padrao)
-                    {
-                        <th class="col-3">Emprestante</th>
-                        <th class="col-2 text-center"><i class="fa fa-cog"></i></th>
-                    }
+                    <th class="col-3">Emprestante</th>
+                    <th class="col-2 text-center"><i class="fa fa-cog"></i></th>
                 </tr>
             </thead>
             <tbody>
@@ -45,15 +42,12 @@
                         <td class="col-2">@(item.DataInicio.Value.ToString("dd/MM/yyyy"))</td>
                         <td class="col-2" style="color: darkred">@(item.DataFimPrevisao.Value.ToString("dd/MM/yyyy"))</td>
                         <td class="col-2">@valorMulta</td>
-                        @if (usuarioLogado.Perfil != Perfil.Padrao)
-                        {
-                            <td class="col-3">@(item.Usuario.Nome)</td>
-                            <td class="col-2 text-center">
-                                <button type="button" class="btn btn-dark" onclick="pagarMulta('@(item.Id)',@valorMulta)">
-                                    <i class="fa fa-money"></i> Pagar multa
-                                </button>
-                            </td>
-                        }
+                        <td class="col-3">@(item.Usuario.Nome)</td>
+                        <td class="col-2 text-center">
+                            <button type="button" class="btn btn-dark" onclick="pagarMulta('@(item.Id)',@valorMulta)">
+                                <i class="fa fa-money"></i> Pagar multa
+                            </button>
+                        </td>
                     </tr>
                 }
             </tbody>

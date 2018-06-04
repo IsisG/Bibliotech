@@ -180,6 +180,7 @@
     <Compile Include="Controllers\EstanteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LivroController.cs" />
+    <Compile Include="Controllers\PagamentoMultaController.cs" />
     <Compile Include="Controllers\ParametroController.cs" />
     <Compile Include="Controllers\PrateleiraController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
@@ -193,6 +194,7 @@
     <Compile Include="Models\Editora.cs" />
     <Compile Include="Models\Estante.cs" />
     <Compile Include="Models\Livro.cs" />
+    <Compile Include="Models\PagamentoMulta.cs" />
     <Compile Include="Models\Parametro.cs" />
     <Compile Include="Models\Prateleira.cs" />
     <Compile Include="Models\Reserva.cs" />
@@ -207,6 +209,7 @@
     <Compile Include="Repository\EstanteRepository.cs" />
     <Compile Include="Repository\ExemplarRepository.cs" />
     <Compile Include="Repository\LivroRepository.cs" />
+    <Compile Include="Repository\PagamentoMultaRepository.cs" />
     <Compile Include="Repository\ParametroRepository.cs" />
     <Compile Include="Repository\PrateleiraRepository.cs" />
     <Compile Include="Repository\ReservaRepository.cs" />
@@ -512,6 +515,7 @@
     <Content Include="Views\Emprestimo\ListarEmprestimosAtrasados.cshtml" />
     <Content Include="Views\Emprestimo\ListarEmprestimosAnteriores.cshtml" />
     <Content Include="Views\Usuario\GerarCartaoUsuario.cshtml" />
+    <Content Include="Views\PagamentoMulta\ListarEmprestimosAPagar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

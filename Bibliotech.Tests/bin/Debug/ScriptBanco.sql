@@ -23,6 +23,10 @@ alter table [Livro]  drop constraint FKA386A9A3EA2A96D4
 alter table [Livro]  drop constraint FKA386A9A362E7AF40
 
 
+    if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FK6507524F14865F11]') AND parent_object_id = OBJECT_ID('[PagamentoMulta]'))
+alter table [PagamentoMulta]  drop constraint FK6507524F14865F11
+
+
     if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FKF4E80CA1E9022747]') AND parent_object_id = OBJECT_ID('[Prateleira]'))
 alter table [Prateleira]  drop constraint FKF4E80CA1E9022747
 
@@ -46,6 +50,8 @@ alter table [Reserva]  drop constraint FKDC280EF02D5FC5DB
     if exists (select * from dbo.sysobjects where id = object_id(N'[Exemplar]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [Exemplar]
 
     if exists (select * from dbo.sysobjects where id = object_id(N'[Livro]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [Livro]
+
+    if exists (select * from dbo.sysobjects where id = object_id(N'[PagamentoMulta]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [PagamentoMulta]
 
     if exists (select * from dbo.sysobjects where id = object_id(N'[Parametro]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [Parametro]
 
@@ -110,6 +116,14 @@ alter table [Reserva]  drop constraint FKDC280EF02D5FC5DB
        Autor_id UNIQUEIDENTIFIER not null,
        Editora_id UNIQUEIDENTIFIER not null,
        Prateleira_id UNIQUEIDENTIFIER null,
+       primary key (Id)
+    )
+
+    create table [PagamentoMulta] (
+        Id UNIQUEIDENTIFIER not null,
+       Valor DECIMAL(19, 2) not null,
+       Data DATETIME not null,
+       Emprestimo_id UNIQUEIDENTIFIER not null,
        primary key (Id)
     )
 
@@ -187,6 +201,11 @@ alter table [Reserva]  drop constraint FKDC280EF02D5FC5DB
         add constraint FKA386A9A362E7AF40 
         foreign key (Prateleira_id) 
         references [Prateleira]
+
+    alter table [PagamentoMulta] 
+        add constraint FK6507524F14865F11 
+        foreign key (Emprestimo_id) 
+        references [Emprestimo]
 
     alter table [Prateleira] 
         add constraint FKF4E80CA1E9022747 

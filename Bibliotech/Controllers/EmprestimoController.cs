@@ -82,6 +82,8 @@ namespace Bibliotech.Controllers
                 {
                     EmprestimoRepository.Instance.SaveOrUpdateEmprestimoUpdateExemplar(emprestimoRetorno, exemplar);
 
+                    BEmprestimo.Instance.EnvioEmailDevolucao(emprestimo);
+
                     return Json(new { Status = BEmprestimo.Instance.Status(), Message = Mensagens.DEVOLUCAO_SUCESSO }, JsonRequestBehavior.AllowGet);
                 }
                 catch (NHibernate.StaleStateException dbcx)
@@ -108,6 +110,8 @@ namespace Bibliotech.Controllers
                 try
                 {
                     EmprestimoRepository.Instance.SaveOrUpdate(emprestimoRetorno);
+
+                    BEmprestimo.Instance.EnvioEmailRenovacao(emprestimo);
 
                     return Json(new { Status = BEmprestimo.Instance.Status(), Message = Mensagens.RENOVACAO_SUCESSO }, JsonRequestBehavior.AllowGet);
                 }

@@ -14,6 +14,7 @@ namespace Bibliotech.Util
         public static string RESERVA_SUCESSO = "Reserva realizada com sucesso.";
         public static string RENOVACAO_SUCESSO = "Renovação realizada com sucesso.";
         public static string DEVOLUCAO_SUCESSO = "Devolução realizada com sucesso.";
+        public static string PAGAMENTO_SUCESSO = "Pagamento registrado com sucesso.";
 
         public static string ERRO_GENERICO = "Ocorreu um erro.";
         public static string ERRO_CONCORRENCIA = "Este registro foi modificado recentemente. Atualize a página e tente novamente.";

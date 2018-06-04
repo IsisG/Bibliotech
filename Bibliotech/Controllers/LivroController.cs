@@ -187,26 +187,33 @@ namespace Bibliotech.Controllers
         private string FormatarEtiquetaExemplar(Exemplar exemplar)
         {
             string conteudo =
-                "<table border='1' width='500px' height='150px' style='margin-top: -8; margin-left: -8; border-collapse: collapse; font-family: Franklin Gothic Medium, Arial Narrow, Arial, sans-serif'>" +
-                    "<tr>" +
-                        "<td width='150px' rowspan='5' style='text-align: center'>" +
-                            "<img src='[QRCODE]' width='130px' height='130px' />" +
-                        "</td>" +
-                        "<td>[TITULO][EDICAO]</td>" +
-                    "</tr>" +
-                    "<tr>" +
-                        "<td>[AUTOR]</td>" +
-                    "</tr>" +
-                    "<tr>" +
-                        "<td>[EDITORA]</td>" +
-                    "</tr>" +
-                    "<tr>" +
-                        "<td>[ISBN]</td>" +
-                    "</tr>" +
-                    "<tr>" +
-                        "<td>[CODIGO]</td>" +
-                    "</tr>" +
-                "</table>";
+                "<html>" +
+                "<head>" +
+                    "<meta charset='UTF-8'>" +
+                "</head>" +
+                "<body>" +
+                    "<table border='1' width='500px' height='150px' style='margin-top: -8; margin-left: -8; border-collapse: collapse; font-family: Franklin Gothic Medium, Arial Narrow, Arial, sans-serif'>" +
+                        "<tr>" +
+                            "<td width='150px' rowspan='5' style='text-align: center'>" +
+                                "<img src='[QRCODE]' width='130px' height='130px' />" +
+                            "</td>" +
+                            "<td>[TITULO][EDICAO]</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td>[AUTOR]</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td>[EDITORA]</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td>[ISBN]</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td>[CODIGO]</td>" +
+                        "</tr>" +
+                    "</table>"+
+                "</body>" +
+                "</html>";
 
             conteudo = conteudo.Replace("[TITULO]",exemplar.Livro.Titulo);
             conteudo = conteudo.Replace("[EDICAO]",exemplar.Livro.Edicao != null ? " - " + exemplar.Livro.Edicao.ToString() + " Ed." : string.Empty);
